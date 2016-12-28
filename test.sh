@@ -2,6 +2,7 @@
 
 b=(a b c d e f g h i j)
 
+
 b[0]='/home/work/data/twitter_crawl_daily/tweets-20160120-json.txt.gz'
 
 b[1]='/home/work/data/twitter_crawl_daily/tweets-20160220-json.txt.gz'
