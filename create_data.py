@@ -1,10 +1,10 @@
-
 # -*- coding: utf-8 -*-
 
 import numpy as np
 import json as js
 from sklearn.externals import joblib
 import sys
+from util import fill_pad, encode_id
 
 input_length = 60
 output_length = 20
@@ -16,18 +16,6 @@ E = []
 P = []
 
 dicts = joblib.load(sys.argv[2])
-
-
-def encode(x,x2id,size):
-    if x not in x2id or x2id[x] > size:
-        return x2id["$UNK"]
-    else:
-        return x2id[x]
-
-def fill_pad(l_id,pad_id,length):
-    result =  l_id[:min(len(l_id),length)] + [pad_id] * max(0,length - len(l_id))
-    assert(len(result) == length)
-    return result
 
 with open(sys.argv[1]) as f:
     for line in f:
@@ -42,7 +30,7 @@ with open(sys.argv[1]) as f:
         emojis = [each[0] for each in targets]
         positions = [int(each[1])+1 for each in targets]
 
-        temp = [encode(each,dicts["word2id"],voc_size) for each in words]
+        temp = [encode_id(each,dicts["word2id"],voc_size) for each in words]
         W.append(fill_pad(temp,0,input_length))
 
         temp = [dicts["emoji2id"][each] for each in emojis]

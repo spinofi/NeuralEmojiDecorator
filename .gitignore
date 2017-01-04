@@ -1,0 +1,5 @@
+*.ckpt
+*.pkl
+*.pyc
+*.meta
+checkpoint
