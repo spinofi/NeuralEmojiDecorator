@@ -23,8 +23,8 @@ def decode(W,E,P,id2word,id2emoji):
         words.append([id2word[each] for each in W[i,:]] + [u""])
         for p,j in zip(P[i,:],E[i,:]):
             if p != 0 and j != 0:
-                if words[i][p-1] != u"$PAD":
-                    words[i][p-1] = id2emoji[j] + u" " +words[i][p-1]
+                #if words[i][p-1] != u"$PAD":
+                words[i][p-1] = id2emoji[j] + u" " +words[i][p-1]
         print u" ".join(filter( lambda w: w != u"$PAD",words[i]))
 
 def encode(sentence,word2id):

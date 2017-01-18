@@ -32,7 +32,7 @@ class Model:
         self.e_size = e_size
         self.p_size = p_size
                 
-        self.word_inputs     = list(reversed([tf.placeholder(tf.int32,(None,)) for _ in range(input_length)]))
+        self.word_inputs     = [tf.placeholder(tf.int32,(None,)) for _ in range(input_length)]
         self.position_inputs = [tf.placeholder(tf.int32,(None,)) for _ in range(output_length)]
         self.emoji_inputs    = [tf.placeholder(tf.int32,(None,)) for _ in range(output_length)]
 
@@ -87,7 +87,7 @@ class Model:
         self.loss = self.emoji_loss + self.position_loss
 
         # optim
-        self.optim = tf.train.AdamOptimizer(0.0003).minimize(self.loss)
+        self.optim = tf.train.AdamOptimizer(0.003).minimize(self.loss)
 
         # session
         self.session = tf.Session()
@@ -130,10 +130,19 @@ class Model:
         E_sample = []
         P_sample = []
         for i in range(self.output_length):
-            preds = self.session.run(self.decoder_emoji_distributions[i],feed_dict=feed) 
-            emoji_output = sample_from_multi(preds) #np.argmax(preds,axis=1)
+            preds = self.session.run(self.decoder_emoji_distributions[i],feed_dict=feed)
+            if i < 8:
+                #preds[0,0] = 0
+                emoji_output = sample_from_multi(preds)
+            else:
+                emoji_output = np.argmax(preds,axis=1)
             preds = self.session.run(self.decoder_position_distributions[i],feed_dict=feed)
-            position_output = sample_from_multi(preds) #np.argmax(preds,axis=1)
+            
+            if i < 8:
+                #preds[0,0] = 0
+                position_output = sample_from_multi(preds)
+            else:
+                position_output = np.argmax(preds,axis=1)
             feed[self.emoji_inputs[i]] = emoji_output
             feed[self.position_inputs[i]] = position_output
             E_sample.append(emoji_output)
